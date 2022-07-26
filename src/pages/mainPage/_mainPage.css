@@ -1,0 +1,15 @@
+.mainPage{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 50px;
+    padding: 20px;
+    background-color: black;
+    -webkit-box-shadow: inset -1px 3px 8px 5px #1F87FF, 2px 5px 16px 0px #0B325E, 5px 5px 15px 5px rgba(0,0,0,0); 
+    box-shadow: inset -1px 3px 8px 5px #1F87FF, 2px 5px 16px 0px #0B325E, 5px 5px 15px 5px rgba(0,0,0,0);
+    border-radius: 12px;
+}
+
+.mainPage__top{
+    display: flex;
+    justify-content: space-around;
+}
