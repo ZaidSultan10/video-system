@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from '../../components/button/Button'
+import VideoPlayer from '../../components/videoPlayer/VideoPlayer'
 import Videos from '../../components/videos/Videos'
 import './_mainPage.css'
 
@@ -9,6 +10,9 @@ const MainPage = () => {
         <div className='mainPage__top'>
             <Button title={`Select`} />
             <Button title={`Capture`} />
+        </div>
+        <div className='mainPage__center'>
+            <VideoPlayer />
         </div>
         <div className='mainPage__bottom'>
             <Videos />
