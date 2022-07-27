@@ -13,7 +13,7 @@ const VideoPlayer = () => {
     };
 
   return (
-    <div style={{color:'white',display:'flex',justifyContent:'center'}}>
+    <div style={{display:'flex',justifyContent:'center',marginTop:'20px'}}>
         <YouTube videoId={'OyfNUysk1oTAsBQC'} opts={opts} />
     </div>
   )

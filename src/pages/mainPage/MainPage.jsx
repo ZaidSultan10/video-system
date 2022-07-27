@@ -8,7 +8,7 @@ const MainPage = () => {
   return (
     <div className='mainPage'>
         <div className='mainPage__top'>
-            <Button title={`Select`} />
+            <Button title={`Select`} inputFlag={true} />
             <Button title={`Capture`} />
         </div>
         <div className='mainPage__center'>
