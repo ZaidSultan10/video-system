@@ -15,6 +15,9 @@ const Videos = () => {
  }, [])
   return (
     <div className='videos'>
+      <h1 style={{color:'white'}}>
+        {`All Videos`}
+      </h1>
       {
         getVideo && getVideo.map((item) => (
           <Video videoName={item.video.videoName} image={item.video.thumbnail} id={item.id} />

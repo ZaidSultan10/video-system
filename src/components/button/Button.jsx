@@ -58,6 +58,7 @@ const Button = ({title,inputFlag}) => {
 
   function closeModal() {
     setIsOpen(false);
+    setGetVideoUrl('')
   }
 
   const handleChange = (e) => {

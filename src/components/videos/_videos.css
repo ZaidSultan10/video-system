@@ -1,7 +1,9 @@
 .videos{
     margin-top: 10px;
     color: white;
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-left: 30px; */
+    flex-direction: column;
 }
