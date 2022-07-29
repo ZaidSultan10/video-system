@@ -101,6 +101,7 @@ const Button = ({title,inputFlag}) => {
       type:getVideo.type,
       timeStamp : moment().format('YYYY-MMM-DD hh:mm:ss')
     })
+    setGetVideoUrl('')
    }else if(getVideo === '' && image === null){
     setFileError(`Please Select Video`)
       setTimeout(() => {
