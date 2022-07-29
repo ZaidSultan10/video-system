@@ -10,7 +10,7 @@ const Video = ({image,id,videoName}) => {
     <div className='video'>
         {/* <img ref={ref} onClick = {() => console.log('id -->',id)} src={image} alt='img' /> */}
 
-        <video style={{border:'1px solid white'}} src={videoName} poster={image} width="320" height="240" controls>
+        <video src={videoName} poster={image} controls>
 
         </video>
     </div>

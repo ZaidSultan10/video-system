@@ -28,6 +28,7 @@ const Button = ({title,inputFlag}) => {
   const [getVideoUrl, setGetVideoUrl] = useState('')
   const [fileError,setFileError] = useState(false)
   const [getVideo,setGetVideo] = useState('')
+  const [loading,setLoading] = useState(false)
   
   const getImage = () => {
     if(getVideoUrl){
@@ -72,6 +73,7 @@ const Button = ({title,inputFlag}) => {
       setGetVideo(file)
       const storageRefs = storageRef(storage, `/media/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRefs, file);
+      setLoading(true)
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -83,6 +85,7 @@ const Button = ({title,inputFlag}) => {
             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                 console.log('url -->',url);
                 setGetVideoUrl(url)
+                setLoading(false)
             });
         }
       );
@@ -141,12 +144,21 @@ const Button = ({title,inputFlag}) => {
               <span style={{color:'white'}}>{fileError}</span>
             )
           }
-          {getVideoUrl && (
-          <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-            <video style={{borderRadius:'12px'}} src= { getVideoUrl } type="video/mp4" width={300} height={180} ref={refs} autoPlay loop controls>
-              {/* <source src= { getVideoUrl } type="video/mp4" /> */}
-            </video>
-          </div>)
+          {
+            loading ? (
+              <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+                <span style={{color:'white'}}>
+                  {`Video Uploading Please wait...`}
+                </span>
+              </div>
+            ) : (
+              getVideoUrl &&
+                (<div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+                  <video style={{borderRadius:'12px'}} src= { getVideoUrl } type="video/mp4" width={300} height={180} ref={refs} autoPlay loop controls>
+                    {/* <source src= { getVideoUrl } type="video/mp4" /> */}
+                  </video>
+                </div>)
+            )
           }
           {/* <video src= { Geo } type="video/mp4" width={300} height={300} ref={refs} autoPlay loop controls>
 
@@ -160,7 +172,7 @@ const Button = ({title,inputFlag}) => {
           {
             getVideoUrl && image && (
               <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-                <img style={{borderRadius:'12px'}} crossOrigin="anonymous" width={300} height={300} src={image} alt={'Screenshot'} />
+                <img style={{borderRadius:'12px',border:'1px solid white'}} crossOrigin="anonymous" width={300} height={180} src={image} alt={'Screenshot'} />
               </div>
             )
           }
