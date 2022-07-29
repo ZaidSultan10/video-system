@@ -120,9 +120,11 @@ const Button = ({title,inputFlag}) => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <button style={{color:'white'}} onClick={selectFile}>
-              {title}
-        </button>
+        <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+          <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'100px',height:'40px',borderRadius:'12px'}} onClick={selectFile}>
+                {title}
+          </button>
+        </div>
         {
             inputFlag && (
               <input
@@ -140,8 +142,8 @@ const Button = ({title,inputFlag}) => {
             )
           }
           {getVideoUrl && (
-          <div style={{backgroundColor:'white'}}>
-            <video src= { getVideoUrl } type="video/mp4" width={300} height={180} ref={refs} autoPlay loop controls>
+          <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+            <video style={{borderRadius:'12px'}} src= { getVideoUrl } type="video/mp4" width={300} height={180} ref={refs} autoPlay loop controls>
               {/* <source src= { getVideoUrl } type="video/mp4" /> */}
             </video>
           </div>)
@@ -149,19 +151,21 @@ const Button = ({title,inputFlag}) => {
           {/* <video src= { Geo } type="video/mp4" width={300} height={300} ref={refs} autoPlay loop controls>
 
           </video> */}
-          <div>
-            <button style={{color:'white'}} onClick={getImage}>
+          <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+            <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={getImage}>
               {`Capture Screenshot`}
             </button>
           </div>
 
           {
             getVideoUrl && image && (
-              <img crossOrigin="anonymous" width={300} height={300} src={image} alt={'Screenshot'} />
+              <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+                <img style={{borderRadius:'12px'}} crossOrigin="anonymous" width={300} height={300} src={image} alt={'Screenshot'} />
+              </div>
             )
           }
-          <div>
-            <button style={{color:'white'}} onClick={() =>{submitVideoAndThumbnail();closeModal()}}>
+          <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+            <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={() =>{submitVideoAndThumbnail();closeModal()}}>
               {`Submit Video And Thumbnail`}
             </button>
           </div>

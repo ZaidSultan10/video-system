@@ -9,11 +9,11 @@ const MainPage = () => {
     <div className='mainPage'>
         <div className='mainPage__top'>
             <Button title={`Select`} inputFlag={true} />
-            <Button title={`Capture`} />
+            {/* <Button title={`Capture`} /> */}
         </div>
-        <div className='mainPage__center'>
+        {/* <div className='mainPage__center'>
             <VideoPlayer />
-        </div>
+        </div> */}
         <div className='mainPage__bottom'>
             <Videos />
         </div>

@@ -13,3 +13,7 @@
     display: flex;
     justify-content: space-around;
 }
+.mainPage__bottom{
+    border: 1px solid white;
+    margin: 20px 0;
+}
