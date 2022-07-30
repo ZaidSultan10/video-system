@@ -1,9 +1,23 @@
 .videos{
     margin-top: 10px;
     color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* margin-left: 30px; */
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}
+.videos__main > h1{
+    text-align: center;
+}
+
+@media screen and (max-width: 1250px){
+    .videos{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media screen and (max-width: 880px){
+    .videos{
+        display: grid;
+        grid-template-columns: 1fr;
+    }
 }
