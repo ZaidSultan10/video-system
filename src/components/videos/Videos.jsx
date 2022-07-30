@@ -21,7 +21,6 @@ const Videos = () => {
       {
         getVideo && getVideo.map((item) => (
           <Video videoName={item.video.videoName} image={item.video.thumbnail} id={item.id} />
-          // <Video videoName={item.video.videoName} id={item.id} />
         ))
       }
     </div>

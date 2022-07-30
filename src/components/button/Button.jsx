@@ -1,40 +1,61 @@
 import React,{ useRef, useState,createRef, useEffect } from 'react'
 import './_button.css'
 import db from '../../firebase/firebase'
-// import firebase from 'firebase';
 import moment from 'moment'
-// import Boy from '../../assets/boy.jpg'
-import { useScreenshot } from 'use-react-screenshot'
-import { useDispatch } from 'react-redux'
-import { setVideoRef } from '../../actions/videoAction'
-// import { getStorage, ref } from "firebase/storage";
 import Modal from 'react-modal';
-import Geo from '../../assets/_Geometric80s12_preview.mp4'
 import {storage} from '../../firebase/firebase.js'
 import { ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import captureVideoFrame from 'capture-video-frame';
+import ReactPlayer from 'react-player'
 
 const Button = ({title,inputFlag}) => {
 
   const fileRef = useRef();
-
-  const refs = createRef(null)
-  const dispatch = useDispatch()
-  // const ref = createRef(null)
-  // const storage = getStorage();
-  const [image, takeScreenshot] = useScreenshot({
-    type: "image/jpeg",
-    quality: 1.0
-  })
+  const refs = useRef()
   const [getVideoUrl, setGetVideoUrl] = useState('')
   const [fileError,setFileError] = useState(false)
   const [getVideo,setGetVideo] = useState('')
   const [loading,setLoading] = useState(false)
+  const [getImages,setGetImages] = useState('')
+  const [getImageUrl,setGetImageUrl] = useState('')
+  const [fileName,setFileName] = useState('')
   
-  const getImage = () => {
-    if(getVideoUrl){
-      takeScreenshot(refs.current)
+  const getImage = async () => {
+    if(getVideo){
+      let capImage = captureVideoFrame(refs.current.getInternalPlayer())
+      setGetImages(capImage)
+      const storageRefs = storageRef(storage, `/media/${fileName.name}`);
+      const imageStorageRef = storageRef(storage, `/image/${Date.now()}`);
+      const uploadTask = uploadBytesResumable(storageRefs, fileName);
+      const uploadImageTask = uploadBytesResumable(imageStorageRef, capImage?.blob);
+      setLoading(true)
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          console.log('snapshot -->',snapshot)
+        },
+        (err) => console.log(err),
+        () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                setGetVideoUrl(url)
+                setLoading(false)
+            });
+        }
+      );
+      uploadImageTask.on(
+        "state_changed",
+        (snapshot) => {
+          console.log('snapshot -->',snapshot)
+        },
+        (err) => console.log(err),
+        () => {
+            // download url
+            getDownloadURL(uploadImageTask.snapshot.ref).then((url) => {
+                setGetImageUrl(url)
+            });
+        }
+      );
     }
-    dispatch(setVideoRef(refs))
   }
 
   const customStyles = {
@@ -59,37 +80,23 @@ const Button = ({title,inputFlag}) => {
   function closeModal() {
     setIsOpen(false);
     setGetVideoUrl('')
+    setGetVideo('')
+    setFileName('')
+    setGetImageUrl('')
+    setGetImages('')
   }
 
   const handleChange = (e) => {
     const [file] = e.target.files;
     console.log(file);
     if(file?.type !== 'video/mp4' && file?.type !== 'video/ogg'){
-      console.log('i am in if')
       setFileError(`File Not Supported`)
       setTimeout(() => {
         setFileError('')
       },3000)
     }else{
-      setGetVideo(file)
-      const storageRefs = storageRef(storage, `/media/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRefs, file);
-      setLoading(true)
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          console.log('snapshot -->',snapshot)
-        },
-        (err) => console.log(err),
-        () => {
-            // download url
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                console.log('url -->',url);
-                setGetVideoUrl(url)
-                setLoading(false)
-            });
-        }
-      );
+      setGetVideo(URL.createObjectURL(file))
+      setFileName(file)
     }
   };
 
@@ -97,13 +104,15 @@ const Button = ({title,inputFlag}) => {
     if(getVideo !== ''){
       db.collection('video').add({
       videoName:getVideoUrl,
-      size:getVideo.size,
-      thumbnail:image ? image : '',
-      type:getVideo.type,
+      thumbnail:getImageUrl,
       timeStamp : moment().format('YYYY-MMM-DD hh:mm:ss')
     })
     setGetVideoUrl('')
-   }else if(getVideo === '' && image === null){
+    setGetVideo('')
+    setFileName('')
+    setGetImageUrl('')
+    setGetImages('')
+   }else if(getVideo === '' && getImages === ''){
     setFileError(`Please Select Video`)
       setTimeout(() => {
         setFileError('')
@@ -114,8 +123,6 @@ const Button = ({title,inputFlag}) => {
   const selectFile = () => {
     fileRef.current.click()
   }
-
-  console.log('image -->',image)
 
   return (
     <>
@@ -141,9 +148,22 @@ const Button = ({title,inputFlag}) => {
               />
             )
           }
+          { 
+            getVideo &&
+              (<div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+                <ReactPlayer width={300} height={180} playing={true} loop={true} url={getVideo} ref={refs} controls={true} />
+              </div>)  
+          }
+          <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+            <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={getImage}>
+              {`Capture Screenshot`}
+            </button>
+          </div>
           {
-            fileError && fileError !== '' && (
-              <span style={{color:'white'}}>{fileError}</span>
+            getVideo && getImages && (
+              <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+                <img style={{borderRadius:'12px',border:'1px solid white'}} width={300} height={180} src={getImages.dataUri} alt={'Screenshot'} crossOrigin="anonymous" />
+              </div>
             )
           }
           {
@@ -154,35 +174,18 @@ const Button = ({title,inputFlag}) => {
                 </span>
               </div>
             ) : (
-              getVideoUrl &&
-                (<div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-                  <video style={{borderRadius:'12px'}} src= { getVideoUrl } type="video/mp4" width={300} height={180} ref={refs} autoPlay loop controls>
-                    {/* <source src= { getVideoUrl } type="video/mp4" /> */}
-                  </video>
-                </div>)
-            )
-          }
-          {/* <video src= { Geo } type="video/mp4" width={300} height={300} ref={refs} autoPlay loop controls>
-
-          </video> */}
-          <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-            <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={getImage}>
-              {`Capture Screenshot`}
-            </button>
-          </div>
-
-          {
-            getVideoUrl && image && (
               <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-                <img style={{borderRadius:'12px',border:'1px solid white'}} crossOrigin="anonymous" width={300} height={180} src={image} alt={'Screenshot'} />
+                <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={() =>{submitVideoAndThumbnail();closeModal()}}>
+                  {`Submit Video And Thumbnail`}
+                </button>
               </div>
             )
           }
-          <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-            <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={() =>{submitVideoAndThumbnail();closeModal()}}>
-              {`Submit Video And Thumbnail`}
-            </button>
-          </div>
+          {
+            fileError && fileError !== '' && (
+              <span style={{color:'white'}}>{fileError}</span>
+            )
+          }
       </Modal>
       <div className='button'>
           <button onClick={inputFlag ? openModal : getImage}>

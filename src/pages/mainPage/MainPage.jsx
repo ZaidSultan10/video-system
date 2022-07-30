@@ -9,9 +9,9 @@ const MainPage = () => {
     <div className='mainPage'>
         <div className='mainPage__top'>
             <Button title={`Select`} inputFlag={true} />
-            {/* <Button title={`Capture`} /> */}
+            {/* Phase2 :  <Button title={`Capture`} /> */}
         </div>
-        {/* <div className='mainPage__center'>
+        {/* Phase2 : <div className='mainPage__center'>
             <VideoPlayer />
         </div> */}
         <div className='mainPage__bottom'>
