@@ -139,7 +139,7 @@ const Button = ({title,inputFlag}) => {
         contentLabel="Example Modal"
       >
         <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-          <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'100px',height:'40px',borderRadius:'12px'}} onClick={selectFile}>
+          <button style={{color:'black',cursor:'pointer',border:'1px solid black',width:'100px',height:'40px',borderRadius:'12px',backgroundColor:'white'}} onClick={selectFile}>
                 {title}
           </button>
         </div>
@@ -161,7 +161,7 @@ const Button = ({title,inputFlag}) => {
               </div>)  
           }
           <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-            <button disabled={getVideo === '' ? true : false} style={{color:`${getVideo === '' ? 'black' : 'white'}`,cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px',backgroundColor:`${getVideo === '' ? 'grey' : 'black'}`}} onClick={getImage}>
+            <button disabled={getVideo === '' ? true : false} style={{color:`${getVideo === '' ? 'grey' : 'black'}`,cursor:'pointer',border:'1px solid black',width:'150px',height:'40px',borderRadius:'12px',backgroundColor:`${getVideo === '' ? 'silver' : 'white'}`}} onClick={getImage}>
               {`Capture Screenshot`}
             </button>
           </div>
@@ -181,7 +181,7 @@ const Button = ({title,inputFlag}) => {
               </div>
             ) : (
               <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-                <button disabled={getVideo === '' || getImages === '' ? true : false} style={{color:`${getVideo === '' || getImages === '' ? 'black' : 'white'}`,cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px',backgroundColor:`${getVideo === '' || getImages === '' ? 'grey' : 'black'}`}} onClick={() =>{
+                <button disabled={getVideo === '' || getImages === '' ? true : false} style={{color:`${getVideo === '' || getImages === '' ? 'grey' : 'black'}`,cursor:'pointer',border:'1px solid black',width:'150px',height:'40px',borderRadius:'12px',backgroundColor:`${getVideo === '' || getImages === '' ? 'silver' : 'white'}`}} onClick={() =>{
                   submitVideoAndThumbnail();
                   if(getVideo !== '' && getImages !== ''){
                     closeModal()
