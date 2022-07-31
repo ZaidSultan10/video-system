@@ -55,6 +55,11 @@ const Button = ({title,inputFlag}) => {
             });
         }
       );
+    }else if(getVideo === ''){
+      setFileError('please upload video')
+      setTimeout(() => {
+        setFileError('')
+      },3000)
     }
   }
 
@@ -67,7 +72,7 @@ const Button = ({title,inputFlag}) => {
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
       width:'80%',
-      height:'400px'
+      height:'700px'
     },
   };
 
@@ -84,6 +89,7 @@ const Button = ({title,inputFlag}) => {
     setFileName('')
     setGetImageUrl('')
     setGetImages('')
+    setLoading(false)
   }
 
   const handleChange = (e) => {
@@ -101,7 +107,7 @@ const Button = ({title,inputFlag}) => {
   };
 
   const submitVideoAndThumbnail = () => {
-    if(getVideo !== ''){
+    if(getVideo !== '' && getImages!== '' && getVideoUrl !=='' && getImageUrl!==''){
       db.collection('video').add({
       videoName:getVideoUrl,
       thumbnail:getImageUrl,
@@ -112,8 +118,8 @@ const Button = ({title,inputFlag}) => {
     setFileName('')
     setGetImageUrl('')
     setGetImages('')
-   }else if(getVideo === '' && getImages === ''){
-    setFileError(`Please Select Video`)
+   }else if(getVideo === '' || getImages === ''){
+    setFileError(`To Submit Make Sure You Select Video and Thumbnail`)
       setTimeout(() => {
         setFileError('')
       },3000)
@@ -155,7 +161,7 @@ const Button = ({title,inputFlag}) => {
               </div>)  
           }
           <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-            <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={getImage}>
+            <button disabled={getVideo === '' ? true : false} style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px',backgroundColor:`${getVideo === '' ? 'red' : 'black'}`}} onClick={getImage}>
               {`Capture Screenshot`}
             </button>
           </div>
@@ -170,12 +176,17 @@ const Button = ({title,inputFlag}) => {
             loading ? (
               <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
                 <span style={{color:'white'}}>
-                  {`Video Uploading Please wait...`}
+                  {`Video and Thumbnail Uploading Please wait...`}
                 </span>
               </div>
             ) : (
               <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
-                <button style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px'}} onClick={() =>{submitVideoAndThumbnail();closeModal()}}>
+                <button disabled={getVideo === '' || getImages === '' ? true : false} style={{color:'white',cursor:'pointer',border:'1px solid white',width:'150px',height:'40px',borderRadius:'12px',backgroundColor:`${getVideo === '' || getImages === '' ? 'red' : 'black'}`}} onClick={() =>{
+                  submitVideoAndThumbnail();
+                  if(getVideo !== '' && getImages !== ''){
+                    closeModal()
+                  }
+                  }}>
                   {`Submit Video And Thumbnail`}
                 </button>
               </div>
@@ -183,7 +194,9 @@ const Button = ({title,inputFlag}) => {
           }
           {
             fileError && fileError !== '' && (
-              <span style={{color:'white'}}>{fileError}</span>
+              <div style={{display:'flex',justifyContent:'center',border:'1px solid white',padding:'20px'}}>
+                  <span style={{color:'white'}}>{fileError}</span>
+              </div>
             )
           }
       </Modal>
